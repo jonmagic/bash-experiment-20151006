@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# http://stackoverflow.com/questions/9612090/how-to-loop-through-file-names-returned-by-find
+
+find . -mindepth 5 -maxdepth 5 -type d -regex ".*\/cache$" -print0 |
+  while IFS= read -r -d $'\0' line; do
+      echo "cache dir: $line"
+
+      path=`echo $line | sed 's/\.\/cache\(\/.*\)\/cache/\.\1/'`
+      echo "possible associated path: $path"
+
+      if [ -d "$path" ]; then
+        echo "found: $path"
+      else
+        echo "not found: $path"
+      fi
+
+      echo
+  done
